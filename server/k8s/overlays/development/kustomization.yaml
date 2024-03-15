@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: staging
+resources:
+    - ../../base
+    - config.yaml
+    - ingress.yaml
+    - secret.yaml
+
+images:
+    -   name: bikramtuladhar/mern-express
+        newName: bikramtuladhar/mern-express-staging
+        newTag: latest

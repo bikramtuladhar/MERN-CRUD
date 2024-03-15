@@ -6,6 +6,9 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import PWAPrompt from "react-ios-pwa-prompt";
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 ReactDOM.render(
 	<React.StrictMode>

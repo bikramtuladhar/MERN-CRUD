@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend
+    labels:
+        tier: backend
+        layer: appserver
+spec:
+    selector:
+        matchLabels:
+            tier: backend
+            layer: appserver
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                tier: backend
+                layer: appserver
+        spec:
+            containers:
+                -   name: backend
+                    envFrom:
+                        -   configMapRef:
+                                name: backend-config
+                        -   secretRef:
+                                name: backend-secret
+                    image: bikramtuladhar/mern-express:latest
+                    imagePullPolicy: Always
+                    ports:
+                        -   containerPort: 8080
+                            name: http-port
+                    securityContext:
+                        allowPrivilegeEscalation: false
+                        privileged: false
+            securityContext:
+              { }

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: backend-ingress
+    annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+    tls:
+        -   hosts:
+                - backend-staging.bikramtuladhar.xyz.np
+            secretName: backend-staging-tls-secret
+    rules:
+        -   host: backend-staging.bikramtuladhar.xyz.np
+            http:
+                paths:
+                    -   path: /
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: backend-service
+                                port:
+                                    number: 3002
+    ingressClassName: nginx
