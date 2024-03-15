@@ -6,7 +6,7 @@ on:
             - "main"
 
 jobs:
-    docker:
+    frontend-prod-build:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -27,6 +27,21 @@ jobs:
                     platforms: linux/amd64,linux/arm64
                     push: true
                     tags: bikramtuladhar/mern-react:latest
+    
+    backend-prod-build:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Set up QEMU
+                uses: docker/setup-qemu-action@v3
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v3
+            -   name: Login to Docker Hub
+                uses: docker/login-action@v3
+                with:
+                    username: ${{ secrets.DOCKERHUB_USERNAME }}
+                    password: ${{ secrets.DOCKERHUB_TOKEN }}
             -   name: Backend Build and push
                 uses: docker/build-push-action@v5
                 with:
@@ -34,3 +49,11 @@ jobs:
                     platforms: linux/amd64,linux/arm64
                     push: true
                     tags: bikramtuladhar/mern-express:latest
+    
+    k8s-apply-prod:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: tale/kubectl-action@v1
+              with:
+                  base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+            - run: kubectl get pods -n staging
